@@ -1,0 +1,1 @@
+{"ast":null,"code":"//our-domain.com/news\nfunction NewsPage() {}","map":{"version":3,"sources":["C:/Users/aange/Desktop/udemyCourse/nextjs/pages/news.js"],"names":["NewsPage"],"mappings":"AAAA;AACA,SAASA,QAAT,GAAoB,CAEnB","sourcesContent":["//our-domain.com/news\r\nfunction NewsPage() {\r\n    \r\n}"]},"metadata":{},"sourceType":"script"}

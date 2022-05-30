@@ -1,6 +1,5 @@
 import MeetupList from '../components/meetups/MeetupList';
 
-
 const DUMMY_MEETUPS = [
     {
         id: 1,
@@ -21,8 +20,23 @@ const DUMMY_MEETUPS = [
 ];
 
 
-function HomePage() {
-    return <MeetupList meetups={DUMMY_MEETUPS} />
+function HomePage(props) {
+
+    return <MeetupList meetups={props.meetups} />
+}
+
+//this only work in pages folder!!!
+//it is async and return promise
+//it is able to load data before this component function is execuited so it can be redndered with required data
+//any code can be written it wont be on client side!
+//always must return a {}
+//
+export function getStaticProps() {
+    return {
+        props: {
+            meetups: DUMMY_MEETUPS
+        }
+    }
 }
 
 export default HomePage;

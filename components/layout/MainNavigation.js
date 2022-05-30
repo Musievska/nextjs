@@ -1,5 +1,6 @@
 import classes from './MainNavigation.module.css';
 import Link from 'next/link';
+//https://nextjs.org/docs/api-reference/next/link
 
 function MainNavigation() {
 

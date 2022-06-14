@@ -1,29 +1,24 @@
+import { Fragment } from 'react';
+import Head from 'next/head';
+import { MongoClient } from 'mongodb';
+
 import MeetupList from '../components/meetups/MeetupList';
 
-const DUMMY_MEETUPS = [
-    {
-        id: 1,
-        title: 'A first dummy meetup',
-        image: 'https://upload.wikimedia.org/wikipedia/commons/2/2d/20100213_Zlatograd_Bulgaria_3.jpg',
-        adress: 'Zlatograd',
-        description: 'First meetup in Zlatograd'
-
-    },
-    {
-        id: 2,
-        title: 'A second dummy meetup',
-        image: 'https://upload.wikimedia.org/wikipedia/commons/2/2d/20100213_Zlatograd_Bulgaria_3.jpg',
-        adress: 'Zlatograd',
-        description: 'Second meetup in Zlatograd'
-    }
-
-];
-
-
 function HomePage(props) {
-
-    return <MeetupList meetups={props.meetups} />
+    return (
+        <Fragment>
+            <Head>
+                <title>React Meetups</title>
+                <meta
+                    name='description'
+                    content='Browse a huge list of highly active React meetups!'
+                />
+            </Head>
+            <MeetupList meetups={props.meetups} />;
+        </Fragment>
+    );
 }
+
 
 //this only work in pages folder!!!
 //it is async and return promise
@@ -42,19 +37,33 @@ function HomePage(props) {
 // }
 
 //dont run in build process, instead always on the server after deployment
-export async function getServerSideProps(context) {
-    const req = context.request;
-    const res = context.response;
-
+export async function getStaticProps() {
+    // fetch data from an API
+    const client = await MongoClient.connect(
+        `mongodb+srv://dilyana:Telenor1@cluster0.y9hbarb.mongodb.net/meetups?retryWrites=true&w=majority`
+    )
     //used when you use auth
     //fetch data from api, always run on the server- never in the client 
     //runs on every coming reques and does not use revalidate
+    const db = client.db();
+
+    const meetupsCollection = db.collection('meetings');
+
+    const meetups = await meetupsCollection.find().toArray();
+
+    client.close();
+
     return {
         props: {
-            meetups: DUMMY_MEETUPS
-        }
-    }
+            meetups: meetups.map((meetup) => ({
+                title: meetup.title,
+                address: meetup.address,
+                image: meetup.image,
+                id: meetup._id.toString(),
+            })),
+        },
+        revalidate: 1,
+    };
 }
-
 
 export default HomePage;
